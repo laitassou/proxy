@@ -1,4 +1,4 @@
-#include "utils/bytes.hh"
+#include "bytes.hh"
 #include <seastar/core/print.hh>
 
 static inline int8_t hex_to_int(unsigned char c) {

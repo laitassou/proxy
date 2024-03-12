@@ -25,8 +25,9 @@
 proxy_add_app (httpd
   SOURCES
 
-    bytes.cc
-    base64.cc
+    utils/bytes.cc
+    utils/base64.cc
+    api_handler.cc
     proxyserver.cc
     main.cc)
 

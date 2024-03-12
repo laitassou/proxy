@@ -19,10 +19,6 @@ using namespace seastar;
 using namespace httpd;
 
 class proxyserver {
-
-
-//httpd::http_server _http_server;
-
     class json_parser {
         static constexpr size_t yieldable_parsing_threshold = 16*KB;
         /*
@@ -45,11 +41,11 @@ class proxyserver {
 
     public:
         proxyserver(const std::string_view &name);
-        future<> init(net::inet_address addr, std::optional<uint16_t> port, std::optional<uint16_t> https_port);
+        future<> init(net::inet_address addr, uint16_t port);
         future<> stop();
 
     private:
-        std::unique_ptr<httpd::http_server_control> _http_server;
+        std::unique_ptr<httpd::http_server> _http_server;
         
         void set_routes(seastar::httpd::routes& r);
         future<>  handle_api_request(std::unique_ptr<http::request> req);

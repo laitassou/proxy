@@ -1,5 +1,4 @@
-#include "utils/base64.hh"
-
+#include "base64.hh"
 #include <seastar/core/print.hh>
 
 // Arrays for quickly converting to and from an integer between 0 and 63,
