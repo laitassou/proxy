@@ -124,14 +124,14 @@ int main(int ac, char** av) {
     prometheus::config pctx;
     app_template app;
 
-    std::unique_ptr<ns_proxyserver::proxyserver> proxy = std::make_unique<ns_proxyserver::proxyserver>("proxy");
-
+    ns_proxyserver::proxyserver proxy = ns_proxyserver::proxyserver("proxy");
+#if 0
     app.add_options()("port", bpo::value<uint16_t>()->default_value(10000), "HTTP Server port");
 
 
     int MAX = 10;
     seastar::queue<int> _data = seastar::queue<int>(MAX);
-
+    
     auto a_lambda = [&]() -> void /*-> seastar::future<>*/ {
 
         std::cout << "Hi.\n";
@@ -149,8 +149,10 @@ int main(int ac, char** av) {
             auto&& config = app.configuration();
 
             uint16_t port = config["port"].as<uint16_t>();
-
-            proxy->init(nullptr, port);
+            sstring addr_str{"127.0.0.1"};
+            net::inet_address addr(addr_str);
+            
+            /*
             auto server = new http_server_control();
             auto rb = std::make_shared<api_registry_builder>("apps/httpd/");
             server->start().get();
@@ -159,19 +161,21 @@ int main(int ac, char** av) {
                 std::cout << "Stoppping HTTP server" << std::endl; // This can throw, but won't.
                 server->stop().get();
             });
-
-            seastar::thread th(a_lambda);
-
+            */
+            /////seastar::thread th(a_lambda);
+            /*
             server->set_routes(set_routes).get();
             server->set_routes([rb](routes& r){rb->set_api_doc(r);}).get();
             server->set_routes([rb](routes& r) {rb->register_function(r, "demo", "hello world application");}).get();
             server->listen(port).get();
-
+            */
             std::cout << "Seastar HTTP server listening on port " << port << " ...\n";
+            proxy->init(addr, port);
 
             stop_signal.wait().get();
-            th.join();
+            /////th.join();
             return 0;
         });
     });
+#endif
 }

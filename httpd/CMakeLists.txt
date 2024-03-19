@@ -27,6 +27,7 @@ proxy_add_app (httpd
 
     utils/bytes.cc
     utils/base64.cc
+    utils/rjson.cc
     api_handler.cc
     proxyserver.cc
     main.cc)
@@ -73,8 +74,10 @@ message("new target: ${target}")
 target_link_libraries (${target}
     LINK_PUBLIC Seastar::seastar)
 
+#target_link_libraries(app_httpd xxHash::xxhash)
 
 
+target_link_libraries (${target} ${RapidJSON_LIBRARIES})
 #target_link_libraries(app_httpd xxHash::xxhash)
 
 #add_dependencies (app_httpd app_httpd_swagger)

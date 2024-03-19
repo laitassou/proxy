@@ -22,16 +22,18 @@ using reply = seastar::http::reply;
 using namespace httpd;
 
 namespace ns_proxyserver {
+template<typename... Ts> struct overloaded_functor : Ts... { using Ts::operator()...; };
+template<typename... Ts> overloaded_functor(Ts...) -> overloaded_functor<Ts...>;
+
 class api_handler : public handler_base {
 public:
-    api_handler(const std::unique_ptr<request> &req);
+    api_handler(const std::function<future<request_return_type>(std::unique_ptr<request> req)>& _handle);
     api_handler(const api_handler&) = default;
     future<std::unique_ptr<reply>> handle(const sstring& path,
             std::unique_ptr<request> req, std::unique_ptr<reply> rep) override;
 
 protected:
     void generate_error_reply(reply& rep, const api_error& err);
-
     future_handler_function _f_handle;
 };
 }

@@ -12,7 +12,7 @@
 
 
 namespace ns_proxyserver {
-using request_return_type = std::variant<json::json_return_type, api_error>;
+//using request_return_type = std::variant<json::json_return_type, api_error>;
 
 using namespace std;
 using namespace seastar;
@@ -38,17 +38,15 @@ class proxyserver {
     };
     json_parser _json_parser;
 
-
     public:
-        proxyserver(const std::string_view &name);
-        future<> init(net::inet_address addr, uint16_t port);
-        future<> stop();
+    proxyserver(const std::string_view &name);
+    future<> init(net::inet_address &addr, uint16_t port);
+    future<> stop();
 
     private:
-        std::unique_ptr<httpd::http_server> _http_server;
-        
-        void set_routes(seastar::httpd::routes& r);
-        future<>  handle_api_request(std::unique_ptr<http::request> req);
+    httpd::http_server _http_server;
+    void set_routes(seastar::httpd::routes& r);
+    future<request_return_type> handle_api_request(std::unique_ptr<http::request> req);
 };
 
 }

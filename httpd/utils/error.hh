@@ -10,14 +10,6 @@ using namespace seastar::http;
 
 namespace ns_proxyserver {
 
-// api_error contains a DynamoDB error message to be returned to the user.
-// It can be returned by value (see executor::request_return_type) or thrown.
-// The DynamoDB's error messages are described in detail in
-// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html
-// An error message has an HTTP code (almost always 400), a type, e.g.,
-// "ResourceNotFoundException", and a human readable message.
-// Eventually alternator::api_handler will convert a returned or thrown
-// api_error into a JSON object, and that is returned to the user.
 class api_error final : public std::exception {
 public:
     using status_type = http::reply::status_type;
@@ -43,11 +35,14 @@ public:
     static api_error resource_not_found(std::string msg) {
         return api_error("ResourceNotFoundException", std::move(msg));
     }
+    static api_error internal(std::string msg) {
+        return api_error("InternalServerError", std::move(msg), http::reply::status_type::internal_server_error);
+    }
 
-    // Provide the "std::exception" interface, to make it easier to print this
-    // exception in log messages.
-    virtual const char* what() const noexcept override;
+    //virtual const char* what() const noexcept override;
+    //virtual ~api_error(){};
     mutable std::string _what_string;
 };
 
+using request_return_type = std::variant<json::json_return_type, api_error>;
 }

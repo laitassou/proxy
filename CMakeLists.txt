@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.13)
 
-set (CMAKE_BUILD_TYPE "Release")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+set (CMAKE_BUILD_TYPE "Debug")
 set (CMAKE_CXX_STANDARD
   "20"
   CACHE
@@ -76,12 +78,14 @@ message("name: ${name} ${target}")
     SEASTAR_SCHEDULING_GROUPS_COUNT=${Seastar_SCHEDULING_GROUPS_COUNT}
     )
 
-  target_include_directories (${target}
+target_include_directories (${target}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     /home/laitasso/local/mount_build/include/
     /home/laitasso/local/mount_build/usr/local/include/
     /home/laitasso/local/mount_build/lib/)
 
+target_include_directories (${target}
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}  ${RAPIDJSON_INCLUDE_DIRS})
 
 link_directories(
     /home/laitasso/local/mount_build/lib/
@@ -93,6 +97,9 @@ link_directories(
 
 target_link_libraries (${target}
     PRIVATE  xxHash::xxhash)
+
+
+target_link_libraries (${target} PRIVATE ${RapidJSON_LIBRARIES})
 
   set_target_properties (${target}
     PROPERTIES
