@@ -124,8 +124,8 @@ int main(int ac, char** av) {
     prometheus::config pctx;
     app_template app;
 
-    ns_proxyserver::proxyserver proxy = ns_proxyserver::proxyserver("proxy");
-#if 0
+    //ns_proxyserver::proxyserver proxy = ns_proxyserver::proxyserver("proxy");
+
     app.add_options()("port", bpo::value<uint16_t>()->default_value(10000), "HTTP Server port");
 
 
@@ -169,6 +169,9 @@ int main(int ac, char** av) {
             server->set_routes([rb](routes& r) {rb->register_function(r, "demo", "hello world application");}).get();
             server->listen(port).get();
             */
+
+            std::unique_ptr<ns_proxyserver::proxyserver> proxy = std::make_unique<ns_proxyserver::proxyserver>("proxy");
+
             std::cout << "Seastar HTTP server listening on port " << port << " ...\n";
             proxy->init(addr, port);
 
@@ -177,5 +180,5 @@ int main(int ac, char** av) {
             return 0;
         });
     });
-#endif
+
 }

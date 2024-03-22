@@ -26,7 +26,7 @@ namespace ns_proxyserver {
                  return make_ready_future<std::unique_ptr<reply>>(std::move(rep));
              }
              auto res = resf.get();
-             /*
+
              std::visit(overloaded_functor {
                  [&] (const json::json_return_type& json_return_value) {
                      //slogger.trace("api_handler success case");
@@ -44,8 +44,7 @@ namespace ns_proxyserver {
                      generate_error_reply(*rep, err);
                  }
              }, res);
-             */
-            
+
              return make_ready_future<std::unique_ptr<reply>>(std::move(rep));
          });
     }){};
@@ -65,7 +64,7 @@ namespace ns_proxyserver {
         if (!err._extra_fields.IsNull() && err._extra_fields.IsObject()) {
             results = rjson::copy(err._extra_fields);
         }
-        rjson::add(results, "__type", rjson::from_string("com.amazonaws.dynamodb.v20120810#" + err._type));
+        rjson::add(results, "__type", rjson::from_string("proxy-" + err._type));
         rjson::add(results, "message", err._msg);
         rep._content = rjson::print(std::move(results));
         rep._status = err._http_code;

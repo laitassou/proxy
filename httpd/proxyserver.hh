@@ -21,8 +21,8 @@ using namespace httpd;
 class proxyserver {
     class json_parser {
         static constexpr size_t yieldable_parsing_threshold = 16*KB;
-        /*
-        chunked_content _raw_document;
+
+        sstring _raw_document;
         rjson::value _parsed_document;
         std::exception_ptr _current_exception;
         semaphore _parsing_sem{1};
@@ -32,11 +32,11 @@ class proxyserver {
         future<> _run_parse_json_thread;
     public:
         json_parser();
-        future<rjson::value> parse(chunked_content&& content);
+        future<rjson::value> parse(sstring &content);
         future<> stop();
-    */
     };
     json_parser _json_parser;
+    std::shared_ptr<semaphore> _memory_limiter;
 
     public:
     proxyserver(const std::string_view &name);
