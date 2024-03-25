@@ -21,6 +21,8 @@
 
 #include "utils/rjson.hh"
 
+#include "bucket_handlers.hh"
+
 #include <memory>
 
 namespace ns_proxyserver {
@@ -47,13 +49,14 @@ inline std::vector<std::string_view> split(std::string_view text, char separator
     return tokens;
 }
 
-proxyserver::proxyserver(const std::string_view &name):_http_server("test") {
+proxyserver::proxyserver(const std::string_view &name):
+_http_server("test")
+,_pending_requests{} {
    // std::cout << name << "\n";
 };
 
 future<>  proxyserver::init(net::inet_address &addr, uint16_t port) {
-    //_memory_limiter = std::make_unique<semaphore>();
-    _memory_limiter = std::make_shared<semaphore>(0);
+    //_memory_limiter = std::make_shared<semaphore>(0);
     if (!port) {
         return make_exception_future<>(std::runtime_error("port not specified"));
     }
@@ -76,6 +79,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     r.put(operation_type::POST, "/test", req_handler);
     //r.put(operation_type::GET, "/test", req_handler);
 
+    r.put(operation_type::GET, "/bucket/list", new bucket_list_handler(_pending_requests));
 };
 
 future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http::request> req){

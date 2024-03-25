@@ -29,6 +29,7 @@ proxy_add_app (httpd
     utils/base64.cc
     utils/rjson.cc
     api_handler.cc
+    bucket_handlers.cc
     proxyserver.cc
     main.cc)
 

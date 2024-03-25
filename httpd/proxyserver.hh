@@ -45,6 +45,7 @@ class proxyserver {
 
     private:
     httpd::http_server _http_server;
+    gate _pending_requests;
     void set_routes(seastar::httpd::routes& r);
     future<request_return_type> handle_api_request(std::unique_ptr<http::request> req);
 };
