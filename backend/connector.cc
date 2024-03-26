@@ -4,24 +4,22 @@
 namespace backend
 {
 
-
-void connector::open() const
+void connector::open()
 {
-  return;
+    return openImpl();
 }
 
+
+void connector::close()
+{
+    return closeImpl();
+}
 connector * connector::clone() const
 {
-     return cloneImpl();
 }
 const char* connector::helpMessage() const
 {
     return helpMessageImpl();
-}
-
-void connector::deallocate()
-{
-    delete this;
 }
 
 }

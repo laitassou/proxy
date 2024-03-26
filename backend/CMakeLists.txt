@@ -9,5 +9,11 @@ set (CMAKE_CXX_STANDARD
   STRING
   "C++ standard to build with.")
 
-  add_library(backend SHARED connector.cc repository.cc )
 
+add_library(backend SHARED connector.cc repository.cc fdb_connector.cc)
+
+message("home $ENV{HOME}")
+target_include_directories (backend
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+  $ENV{HOME}/.local/usr/include
+)
