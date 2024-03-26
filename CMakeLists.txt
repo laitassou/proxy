@@ -111,4 +111,5 @@ endmacro ()
 
 
 add_subdirectory (httpd)
+add_subdirectory (backend)
 
