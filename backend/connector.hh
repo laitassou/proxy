@@ -11,7 +11,7 @@ namespace backend {
     public:
         virtual ~ connector() {};
       	connector * clone () const;
-      	const char * helpMessage() const;
+      	//const char * helpMessage() const;
         void open() ;
         void close();
 
@@ -23,7 +23,7 @@ namespace backend {
       	virtual void openImpl() noexcept = 0;
       	virtual void closeImpl() noexcept = 0;
 
-	    virtual const char * helpMessageImpl() const noexcept = 0;
+	    //virtual const char * helpMessageImpl() const noexcept = 0;
 
 	    connector(connector&&) = delete;
 	    connector & operator = (const connector &) = delete;

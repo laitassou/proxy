@@ -9,17 +9,15 @@
 
 #include "connector.hh"
 
+
 namespace backend {
 
  class fdb_connector : public connector 
  {
     public:
         virtual ~ fdb_connector() {};
-      	fdb_connector * clone () const;
-      	const char * helpMessage() const;
-
-    protected:
-        fdb_connector() {};
+      	//const char * helpMessage() const { return nullptr; };
+        fdb_connector(std::string &cluster_path, FDBDatabase * db);
 	    fdb_connector (const fdb_connector&) {};
 
     private:
@@ -30,6 +28,10 @@ namespace backend {
 	    fdb_connector(fdb_connector&&) = delete;
 	    fdb_connector & operator = (const fdb_connector &) = delete;
 	    fdb_connector & operator = (fdb_connector &&) = delete;
+    
+    private:
+        std::string  _cluster_path;
+        FDBDatabase *_db;
  };
 
 }

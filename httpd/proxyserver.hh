@@ -9,6 +9,7 @@
 #include <seastar/json/json_elements.hh>
 #include "utils/rjson.hh"
 #include "utils/error.hh"
+#include "../backend/connector.hh"
 
 
 namespace ns_proxyserver {
@@ -17,6 +18,8 @@ namespace ns_proxyserver {
 using namespace std;
 using namespace seastar;
 using namespace httpd;
+
+using namespace backend;
 
 class proxyserver {
     class json_parser {
@@ -48,6 +51,7 @@ class proxyserver {
     gate _pending_requests;
     void set_routes(seastar::httpd::routes& r);
     future<request_return_type> handle_api_request(std::unique_ptr<http::request> req);
+    std::shared_ptr<connector> _db_connector;
 };
 
 }

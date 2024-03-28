@@ -48,37 +48,38 @@ target_include_directories (app_httpd
 PRIVATE xxHash)
 
 link_directories(
-/home/laitasso/local/mount_build/lib/
+    $ENV{HOME}/local/mount_build/lib/
+    $ENV{HOME}/.local/usr/lib/
 )
 
 message("CMAKE_MODULE_PATH : ${CMAKE_MODULE_PATH}")
 
-find_package(fmt REQUIRED)
 find_package (Valgrind REQUIRED)
-find_package(Seastar REQUIRED PATHS /home/laitasso/local/mount_build/lib/cmake/Seastar)
+find_package(Seastar REQUIRED PATHS $ENV{HOME}/local/mount_build/lib/cmake/Seastar)
 
 if (Seastar_FOUND)
     message("seastar")
 ENDIF()
 
 find_library(seastar NAMES seastar  PATH_SUFFIXES lib  
-HINTS "/home/laitasso/local/mount_build/lib")
+HINTS "$ENV{HOME}/local/mount_build/lib")
 
 target_include_directories (${target}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-    /home/laitasso/local/mount_build/include/
-    /home/laitasso/local/mount_build/lib/
-    /home/laitasso/local/mount_build/usr/local/include/)
+    $ENV{HOME}/local/mount_build/include/
+    $ENV{HOME}/local/mount_build/lib/
+    $ENV{HOME}/.local/usr/include
+    $ENV{HOME}/local/mount_build/usr/local/include/)
 
 
 message("new target: ${target}")
 target_link_libraries (${target}
-    LINK_PUBLIC Seastar::seastar)
+    LINK_PUBLIC Seastar::seastar ${RapidJSON_LIBRARIES} backend $ENV{HOME}/.local/usr/lib/libfdb_c.so)
 
 #target_link_libraries(app_httpd xxHash::xxhash)
 
 
-target_link_libraries (${target} ${RapidJSON_LIBRARIES})
+#target_link_libraries (${target} ${RapidJSON_LIBRARIES} backend)
 #target_link_libraries(app_httpd xxHash::xxhash)
 
 #add_dependencies (app_httpd app_httpd_swagger)

@@ -17,9 +17,10 @@ void connector::close()
 connector * connector::clone() const
 {
 }
+/*
 const char* connector::helpMessage() const
 {
     return helpMessageImpl();
 }
-
+*/
 }

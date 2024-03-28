@@ -27,8 +27,9 @@ message("current src dir ${CMAKE_CURRENT_SOURCE_DIR}")
 list (APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_BINARY_DIR} 
-  "/home/laitasso/local/mount_build/usr/local/lib/cmake"
-  "/home/laitasso/local/mount_build/lib/cmake")
+  "$ENV{HOME}/local/mount_build/usr/local/lib/cmake"
+  "$ENV{HOME}/local/mount_build/lib/cmake"
+  "$ENV{HOME}/local/mount_build/lib/cmake/fmt")
 
 
 message("CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
@@ -37,14 +38,14 @@ find_package(RapidJSON REQUIRED)
 
 
 find_path(xxHash_INCLUDE_DIR NAME xxhash.h PATH_SUFFIXES include
-HINTS "/home/laitasso/local/mount_build/usr/local/include")
+HINTS "/$ENV{HOME}/local/mount_build/usr/local/include")
 find_library(xxhash_LIBRARY NAMES xxhash  PATH_SUFFIXES lib  
-HINTS "/home/laitasso/local/mount_build/usr/local/lib")
+HINTS "$ENV{HOME}/local/mount_build/usr/local/lib")
 
 find_library(seastar seastar 
-HINTS "/home/laitasso/local/mount_build/lib")
+HINTS "$ENV{HOME}/local/mount_build/lib")
 
-find_package(xxHash 0.7 CONFIG REQUIRED PATHS /home/laitasso/local/mount_build/usr/local/lib/cmake/xxHash/)
+find_package(xxHash 0.7 CONFIG REQUIRED PATHS $ENV{HOME}/local/mount_build/usr/local/lib/cmake/xxHash/)
 
 IF (xxHash_FOUND)
     message("found: ${xxHash_INCLUDE_DIR}")
@@ -80,15 +81,15 @@ message("name: ${name} ${target}")
 
 target_include_directories (${target}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-    /home/laitasso/local/mount_build/include/
-    /home/laitasso/local/mount_build/usr/local/include/
-    /home/laitasso/local/mount_build/lib/)
+    $ENV{HOME}/local/mount_build/include/
+    $ENV{HOME}/local/mount_build/usr/local/include/
+    $ENV{HOME}/local/mount_build/lib/)
 
 target_include_directories (${target}
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}  ${RAPIDJSON_INCLUDE_DIRS})
 
 link_directories(
-    /home/laitasso/local/mount_build/lib/
+    $ENV{HOME}/local/mount_build/lib/
     )
 
 #message("target: ${target}")
@@ -109,7 +110,6 @@ add_dependencies (apps ${target})
 endmacro ()
 
 
-
-add_subdirectory (httpd)
 add_subdirectory (backend)
+add_subdirectory (httpd)
 

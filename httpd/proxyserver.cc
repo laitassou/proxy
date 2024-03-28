@@ -23,6 +23,8 @@
 
 #include "bucket_handlers.hh"
 
+#include "../backend/fdb_connector.hh"
+
 #include <memory>
 
 namespace ns_proxyserver {
@@ -52,7 +54,10 @@ inline std::vector<std::string_view> split(std::string_view text, char separator
 proxyserver::proxyserver(const std::string_view &name):
 _http_server("test")
 ,_pending_requests{} {
-   // std::cout << name << "\n";
+    std::string cluster_file = std::string{"/home/laitasso/.oio/sds/conf/OPENIO-fdb.cluster"};
+   // std::cout << name << "\n"; 
+   FDBDatabase *database {};
+    _db_connector = std::make_shared<fdb_connector>(cluster_file, database);
 };
 
 future<>  proxyserver::init(net::inet_address &addr, uint16_t port) {
@@ -61,6 +66,7 @@ future<>  proxyserver::init(net::inet_address &addr, uint16_t port) {
         return make_exception_future<>(std::runtime_error("port not specified"));
     }
     return seastar::async([this, addr, port] {
+        _db_connector->open();
         set_routes(_http_server._routes);
         _http_server.listen(socket_address{addr, port}).get();
     });
