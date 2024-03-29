@@ -7,6 +7,9 @@
 #define FDB_API_VERSION 610
 #include <foundationdb/fdb_c.h>
 
+#include <thread>
+
+
 #include "connector.hh"
 
 
@@ -21,8 +24,8 @@ namespace backend {
 	    fdb_connector (const fdb_connector&) {};
 
     private:
-      	virtual void openImpl() noexcept override;
-      	virtual void closeImpl() noexcept override;
+      	virtual void openImpl() override;
+      	virtual void closeImpl() override;
 
 
 	    fdb_connector(fdb_connector&&) = delete;
@@ -32,6 +35,7 @@ namespace backend {
     private:
         std::string  _cluster_path;
         FDBDatabase *_db;
+        std::thread _thread; 
  };
 
 }

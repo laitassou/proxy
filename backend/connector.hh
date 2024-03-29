@@ -20,8 +20,8 @@ namespace backend {
 	    connector (const connector&) {};
 
     private:
-      	virtual void openImpl() noexcept = 0;
-      	virtual void closeImpl() noexcept = 0;
+      	virtual void openImpl()  = 0;
+      	virtual void closeImpl()  = 0;
 
 	    //virtual const char * helpMessageImpl() const noexcept = 0;
 
