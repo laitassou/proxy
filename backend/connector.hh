@@ -9,11 +9,15 @@ namespace backend {
  class connector
  {
     public:
+    struct handle {};
+    using s_handle = struct handle;
         virtual ~ connector() {};
       	connector * clone () const;
       	//const char * helpMessage() const;
         void open() ;
         void close();
+        virtual void store_data(const char *key, const char *val) {};
+
 
     protected:
         connector() {};

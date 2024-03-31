@@ -56,9 +56,32 @@ void fdb_connector::openImpl()
 
 void fdb_connector::closeImpl() 
 {   
+    fdb_stop_network();
     fdb_database_destroy(_db); 
     _thread.join();
 }
 
+void fdb_connector::store_data(const char *key, const char *val)
+{
+    int committed = 0;
+    //  create transaction
+    FDBTransaction *tr;
+    fdb_database_create_transaction(_db, &tr);
+    while(!committed)
+    {
+        //  store data
+        fdb_transaction_set(tr, (const uint8_t *)key, (int)strlen(key),\
+            (const uint8_t *)val, (int)strlen(val));
+
+        //  commit to database
+        FDBFuture *commitFuture = fdb_transaction_commit(tr);
+        fdb_future_block_until_ready(commitFuture);
+        committed = 1;
+
+        fdb_future_destroy(commitFuture);
+    }
+    //  destroy transaction
+    fdb_transaction_destroy(tr);
+}
 
 }

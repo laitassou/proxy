@@ -4,7 +4,7 @@
 #include <memory>
 #include <functional>
 
-#define FDB_API_VERSION 610
+#define FDB_API_VERSION 630
 #include <foundationdb/fdb_c.h>
 
 #include <thread>
@@ -17,11 +17,16 @@ namespace backend {
 
  class fdb_connector : public connector 
  {
+        struct fdb_handle : connector::s_handle {
+            FDBDatabase * db;
+        };
     public:
         virtual ~ fdb_connector() {};
       	//const char * helpMessage() const { return nullptr; };
         fdb_connector(std::string &cluster_path, FDBDatabase * db);
 	    fdb_connector (const fdb_connector&) {};
+        FDBDatabase * get_handle() {return _db;};
+        virtual void store_data(const char *key, const char *val) override;
 
     private:
       	virtual void openImpl() override;
@@ -36,6 +41,7 @@ namespace backend {
         std::string  _cluster_path;
         FDBDatabase *_db;
         std::thread _thread; 
+
  };
 
 }

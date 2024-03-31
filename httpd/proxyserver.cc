@@ -72,7 +72,9 @@ future<>  proxyserver::init(net::inet_address &addr, uint16_t port) {
     });
 };
 future<>  proxyserver::stop() {
-    return seastar::async([&] { });
+    return seastar::async([&] {
+        _db_connector->close();
+     });
 };
 
 void proxyserver::set_routes(seastar::httpd::routes& r){
@@ -104,11 +106,14 @@ future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http
 
     rjson::value json_request = co_await _json_parser.parse(req.get()->content);
     for (auto iter = json_request.MemberBegin(); iter != json_request.MemberEnd(); ++iter){
-        std::cout <<  iter->name.GetString() << ":" <<  iter->value.GetString() << "\n";
+        std::cout << "key:" << iter->name.GetString() << ":" <<  iter->value.GetString() << "\n";
+        _db_connector->store_data(iter->name.GetString(), iter->value.GetString());
+
     }
     rjson::value response = rjson::empty_object();
     rjson::add(response, "Table", "ok");
-    co_return  make_ready_future<request_return_type>(rjson::print(std::move(response)));
+
+    co_return  co_await make_ready_future<request_return_type>(rjson::print(std::move(response)));
 };
 
 proxyserver::json_parser::json_parser() : _run_parse_json_thread(async([this] {
