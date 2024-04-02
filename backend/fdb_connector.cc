@@ -3,6 +3,7 @@
 #include "fdb_connector.hh"
 #include <thread>
 
+#include <iostream>
 
 namespace backend
 {
@@ -82,6 +83,21 @@ void fdb_connector::store_data(const char *key, const char *val)
     }
     //  destroy transaction
     fdb_transaction_destroy(tr);
+}
+
+void fdb_connector::read_data(char *key)
+{
+    //  get value
+    FDBTransaction *tr;
+    fdb_database_create_transaction(_db, &tr);
+    FDBFuture *getFuture = fdb_transaction_get(tr, (const uint8_t *)key, (int)strlen(key), 0);
+    fdb_bool_t valuePresent;
+    const uint8_t *value;
+    int valueLength;
+    fdb_future_get_value(getFuture, &valuePresent, &value, &valueLength);
+    std::cout << "value for key: " << key << "is "<< value << "\n";
+    fdb_transaction_destroy(tr);
+    fdb_future_destroy(getFuture);
 }
 
 }

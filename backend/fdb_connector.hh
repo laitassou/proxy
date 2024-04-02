@@ -27,6 +27,7 @@ namespace backend {
 	    fdb_connector (const fdb_connector&) {};
         FDBDatabase * get_handle() {return _db;};
         virtual void store_data(const char *key, const char *val) override;
+        virtual void read_data(char *key) override;
 
     private:
       	virtual void openImpl() override;
