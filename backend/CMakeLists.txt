@@ -17,7 +17,7 @@ link_directories(
 find_package(fmt REQUIRED PATHS $ENV{HOME}/local/mount_build/lib/cmake/fmt)
 
 
-add_library(backend SHARED connector.cc repository.cc fdb_connector.cc)
+add_library(backend SHARED connector.cc bucket.cc object.cc fdb_connector.cc)
 
 message("home $ENV{HOME}")
 target_include_directories (backend

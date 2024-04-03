@@ -32,6 +32,8 @@ namespace ns_proxyserver {
 
 static constexpr auto TARGET = "X-Amz-Target";
 
+static constexpr auto fdb_path ="/home/laitasso/.oio/sds/conf/OPENIO-fdb.cluster";
+
 inline std::vector<std::string_view> split(std::string_view text, char separator) {
     std::vector<std::string_view> tokens;
     if (text == "") {
@@ -54,7 +56,7 @@ inline std::vector<std::string_view> split(std::string_view text, char separator
 proxyserver::proxyserver(const std::string_view &name):
 _http_server("test")
 ,_pending_requests{} {
-    std::string cluster_file = std::string{"/home/laitasso/.oio/sds/conf/OPENIO-fdb.cluster"};
+    std::string cluster_file = std::string{fdb_path};
    // std::cout << name << "\n"; 
    FDBDatabase *database {};
     _db_connector = std::make_shared<fdb_connector>(cluster_file, database);
