@@ -1,26 +1,26 @@
 #pragma once
 
-
 #include <memory>
 #include <string>
 
 namespace backend {
 
-
-template<class T> class bucket {
+class bucket {
     class bucket_impl;
+    static constexpr auto buckets_space ="buckets";
 
 public:
-    static bucket& Instance();
-    void put();
-    void del();
-    void get();
-    void list();
-    void update();
+    explicit bucket(const std::shared_ptr<connector> & connect) {
+        _pimpl = std::make_unique<bucket_impl>(connect);
+    };
+
+    void create(std::string &account, std::string &bucket);
+    void del(std::string &account, std::string &bucket);
+    void show(std::string &account, std::string &bucket);
+    void list(std::string &account, std::string &marker, std::string &prefix);
+    void update(std::string &account, std::string &bucket);
 
 private:
-    bucket();
-    ~bucket();
     bucket(const bucket&) = delete;
     bucket(bucket&&) = delete;
     bucket& operator=(const bucket&) = delete;

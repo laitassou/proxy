@@ -85,7 +85,7 @@ void fdb_connector::store_data(const char *key, const char *val)
     fdb_transaction_destroy(tr);
 }
 
-void fdb_connector::read_data(char *key)
+void fdb_connector::read_data(const char *key)
 {
     //  get value
     FDBTransaction *tr;

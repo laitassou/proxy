@@ -7,7 +7,7 @@
 namespace backend {
 
 
-template<class T> class object {
+class object {
     class object_impl;
 
 public:

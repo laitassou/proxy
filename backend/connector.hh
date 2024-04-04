@@ -17,7 +17,7 @@ namespace backend {
         void open() ;
         void close();
         virtual void store_data(const char *key, const char *val) {};
-        virtual void read_data(char *key) {};
+        virtual void read_data(const char *key) {};
 
     protected:
         connector() {};
