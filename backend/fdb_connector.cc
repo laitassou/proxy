@@ -100,4 +100,16 @@ void fdb_connector::read_data(const char *key)
     fdb_future_destroy(getFuture);
 }
 
+void fdb_connector::clear_key(const char *key)
+{
+    //  get value
+    FDBTransaction *tr;
+    fdb_database_create_transaction(_db, &tr);
+    fdb_transaction_clear(tr, (const uint8_t *)key, (int)strlen(key));
+    //  commit to database
+    FDBFuture *commitFuture = fdb_transaction_commit(tr);
+    fdb_future_block_until_ready(commitFuture);
+    fdb_future_destroy(commitFuture);
+}
+
 }
