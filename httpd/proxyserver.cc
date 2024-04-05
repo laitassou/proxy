@@ -22,6 +22,7 @@
 #include "utils/rjson.hh"
 
 #include "bucket_handlers.hh"
+#include "object_handlers.hh"
 
 #include "../backend/fdb_connector.hh"
 
@@ -87,11 +88,49 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
             std::unique_ptr<request> req) mutable {
         return handle_api_request(std::move(req));
     });
+
+    std::string version {"v3.0"};
+    std::string ns {"OPENIO"};
+
     std::cout << "set routes" << "\n";
     r.put(operation_type::POST, "/test", req_handler);
     //r.put(operation_type::GET, "/test", req_handler);
 
-    r.put(operation_type::GET, "/bucket/list", new bucket_list_handler(_pending_requests));
+    // Container routes
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/create", new bucket_create_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/destroy", new bucket_destroy_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/container/list", new bucket_list_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/container/show", new bucket_show_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/container/get_properties", new bucket_get_props_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/set_properties", new bucket_set_props_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/del_properties", new bucket_del_props_handler(_pending_requests));
+
+
+    // Object routes
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/create", new object_create_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/delete", new object_delete_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/content/show", new object_show_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/content/locate", new object_locate_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/content/get_properties", new object_get_props_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/set_properties", new object_set_props_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/del_properties", new object_del_props_handler(_pending_requests));
+
+    // Consience routes
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/info", new object_create_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/conscience/list", new object_delete_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/deregister", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/flush", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/lock", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/unlock", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/resolve", new object_show_handler(_pending_requests));
+
+    // Load balancing routes
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/reload", new object_create_handler(_pending_requests));
+    r.put(operation_type::GET, "/" + version + "/" + ns + "/lb/choose", new object_delete_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/poll", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/create_pool", new object_show_handler(_pending_requests));
+
 };
 
 future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http::request> req){

@@ -1,3 +1,5 @@
+#pragma once 
+
 #include <seastar/http/httpd.hh>
 #include <seastar/http/handlers.hh>
 #include <seastar/http/function_handlers.hh>
