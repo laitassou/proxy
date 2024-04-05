@@ -29,7 +29,11 @@ proxy_add_app (httpd
     utils/base64.cc
     utils/rjson.cc
     api_handler.cc
+    admin_handlers.cc
     bucket_handlers.cc
+    conscience_handlers.cc
+    lb_handlers.cc
+    object_handlers.cc
     proxyserver.cc
     main.cc)
 
