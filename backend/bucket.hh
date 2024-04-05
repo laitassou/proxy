@@ -10,10 +10,8 @@ class bucket {
     static constexpr auto buckets_space ="buckets";
 
 public:
-    explicit bucket(const std::shared_ptr<connector> & connect) {
-        _pimpl = std::make_unique<bucket_impl>(connect);
-    };
-
+    explicit bucket(const std::shared_ptr<connector> & connect);
+    ~bucket();
     void create(std::string &account, std::string &bucket);
     void del(std::string &account, std::string &bucket);
     void show(std::string &account, std::string &bucket);
@@ -21,7 +19,6 @@ public:
     void update(std::string &account, std::string &bucket);
 
 private:
-    bucket(const bucket&) = delete;
     bucket(bucket&&) = delete;
     bucket& operator=(const bucket&) = delete;
     bucket& operator=(const bucket&&) = delete;

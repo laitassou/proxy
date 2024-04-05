@@ -60,6 +60,8 @@ _http_server("test")
    // std::cout << name << "\n"; 
    FDBDatabase *database {};
     _db_connector = std::make_shared<fdb_connector>(cluster_file, database);
+    _bucket = std::make_shared<bucket>(_db_connector);
+    _object =  std::make_shared<object>(_db_connector); 
 };
 
 future<>  proxyserver::init(net::inet_address &addr, uint16_t port) {
@@ -97,6 +99,10 @@ future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http
     std::cout << "target " << target << "\n";
     std::vector<std::string_view> split_target = split(target, '.');
     std::cout << req->_method << "\n";
+    for (const auto& p : req->query_parameters) {
+        std::cout << p.first << "\n";
+
+    }
     /*
     size_t mem_estimate = req->content_length * 2 + 8000;
     auto units_fut = get_units(*(_memory_limiter.get()), mem_estimate);
@@ -109,8 +115,10 @@ future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http
     rjson::value json_request = co_await _json_parser.parse(req.get()->content);
     for (auto iter = json_request.MemberBegin(); iter != json_request.MemberEnd(); ++iter){
         std::cout << "key:" << iter->name.GetString() << ":" <<  iter->value.GetString() << "\n";
-        _db_connector->store_data(iter->name.GetString(), iter->value.GetString());
-
+        //_db_connector->store_data(iter->name.GetString(), iter->value.GetString());
+        std::string k=iter->name.GetString();
+        std::string v=iter->value.GetString();
+        _bucket->create(k,v);
     }
     rjson::value response = rjson::empty_object();
     rjson::add(response, "Table", "ok");

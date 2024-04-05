@@ -39,12 +39,17 @@ void bucket::bucket_impl::update(std::string &account, std::string &bucket){
 }
 
 
-    
+bucket::bucket(const std::shared_ptr<connector> & connect) {
+     _pimpl = std::make_unique<bucket_impl>(connect);
+}
+bucket::~bucket() {
+
+}
 void bucket::create(std::string &account, std::string &bucket){
     _pimpl->create(account, bucket);  
 }
 void bucket::del(std::string &account, std::string &bucket){
-    _pimpl->create(account, bucket);      
+    _pimpl->del(account, bucket);      
 }
 void bucket::show(std::string &account, std::string &bucket){
     _pimpl->show(account, bucket);      

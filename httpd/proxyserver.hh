@@ -10,6 +10,8 @@
 #include "utils/rjson.hh"
 #include "utils/error.hh"
 #include "../backend/connector.hh"
+#include "../backend/bucket.hh"
+#include "../backend/object.hh"
 
 
 namespace ns_proxyserver {
@@ -43,6 +45,7 @@ class proxyserver {
 
     public:
     proxyserver(const std::string_view &name);
+    ~proxyserver(){};
     future<> init(net::inet_address &addr, uint16_t port);
     future<> stop();
 
@@ -52,6 +55,8 @@ class proxyserver {
     void set_routes(seastar::httpd::routes& r);
     future<request_return_type> handle_api_request(std::unique_ptr<http::request> req);
     std::shared_ptr<connector> _db_connector;
+    std::shared_ptr<bucket> _bucket;
+    std::shared_ptr<object> _object;
 };
 
 }
