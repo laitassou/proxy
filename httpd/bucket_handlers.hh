@@ -1,14 +1,21 @@
 #pragma once 
 
 #include "gated_handler.hh"
+#include "../backend/bucket.hh"
+
+using namespace backend;
 
 namespace ns_proxyserver {
 class bucket_create_handler : public gated_handler  {
 public:
-    bucket_create_handler(seastar::gate& pending_requests) :
-        gated_handler(pending_requests) {};
+    bucket_create_handler(seastar::gate& pending_requests,
+    const std::shared_ptr<bucket> & _bucket) :
+        gated_handler(pending_requests), _bucket(_bucket) {};
 protected:
     virtual future<std::unique_ptr<reply>> do_handle(const sstring& path, std::unique_ptr<request> req, std::unique_ptr<reply> rep) override;
+
+private:
+    std::shared_ptr<bucket> _bucket;
 };
 
 class bucket_destroy_handler : public gated_handler  {

@@ -4,6 +4,8 @@
 #include <memory>
 #include <functional>
 
+#include <map>
+
 namespace backend {
 
  class connector
@@ -16,7 +18,7 @@ namespace backend {
       	//const char * helpMessage() const;
         void open() ;
         void close();
-        virtual void store_data(const char *key, const char *val) {};
+        virtual void store_data(std::map<const char *, const char *> &mp) {};
         virtual void read_data(const char *key) {};
         virtual void clear_key(const char *key) {};
 

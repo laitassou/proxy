@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <iostream>
+#include <map>
 
 namespace backend
 {
@@ -62,7 +63,7 @@ void fdb_connector::closeImpl()
     _thread.join();
 }
 
-void fdb_connector::store_data(const char *key, const char *val)
+void fdb_connector::store_data(std::map<const char *, const char *> &mp)
 {
     int committed = 0;
     //  create transaction
@@ -71,9 +72,11 @@ void fdb_connector::store_data(const char *key, const char *val)
     while(!committed)
     {
         //  store data
-        fdb_transaction_set(tr, (const uint8_t *)key, (int)strlen(key),\
-            (const uint8_t *)val, (int)strlen(val));
-
+        for (std::map<const char *,const char *>::iterator it=mp.begin(); it!=mp.end(); ++it){
+            std::cout << it->first << " => " << it->second << '\n';
+            fdb_transaction_set(tr, (const uint8_t *)(it->first), (int)strlen(it->first),\
+                (const uint8_t *)(it->second), (int)strlen(it->second));
+        }
         //  commit to database
         FDBFuture *commitFuture = fdb_transaction_commit(tr);
         fdb_future_block_until_ready(commitFuture);

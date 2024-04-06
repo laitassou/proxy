@@ -25,7 +25,7 @@ _db_connector(connect){}
 
 void object::object_impl::put(std::string &account, std::string &bucket, std::string &object){
     std::string concated = objects_space + std::string{"/"} + account + std::string{"/"} + bucket + std::string{"/"} + object;
-    _db_connector->store_data(concated.c_str(), "1");
+    //_db_connector->store_data(concated.c_str(), "1");
 }
 void object::object_impl::del(std::string &account, std::string &bucket, std::string &object){
 }

@@ -3,6 +3,9 @@
 #include <memory>
 #include <string>
 
+#include "connector.hh"
+
+
 namespace backend {
 
 class bucket {

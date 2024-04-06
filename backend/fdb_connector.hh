@@ -26,7 +26,7 @@ namespace backend {
         fdb_connector(std::string &cluster_path, FDBDatabase * db);
 	    fdb_connector (const fdb_connector&) {};
         FDBDatabase * get_handle() {return _db;};
-        virtual void store_data(const char *key, const char *val) override;
+        virtual void store_data(std::map<const char *, const char *> &mp) override;
         virtual void read_data(const char *key) override;
         virtual void clear_key(const char *key) override;
 

@@ -97,7 +97,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     //r.put(operation_type::GET, "/test", req_handler);
 
     // Container routes
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/create", new bucket_create_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/container/create", new bucket_create_handler(_pending_requests, _bucket));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/container/destroy", new bucket_destroy_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/container/list", new bucket_list_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/container/show", new bucket_show_handler(_pending_requests));
