@@ -29,15 +29,15 @@ void bucket::bucket_impl::create(std::string &account, std::string &bucket){
     std::string bucket_key = buckets_space + std::string{"/"} + account + std::string{"/"} + bucket;
     std::string val {"1"};
     std::string object_count = bucket_key + std::string{"/objects"};
-    std::string cnt {"1"};
+    std::string cnt {"0"};
     std::string bucket_ctime = bucket_key + std::string{"/ctime"};
-    milliseconds ms = duration_cast< milliseconds >(
-    system_clock::now().time_since_epoch()
-);
+    milliseconds ms = duration_cast< milliseconds>(
+        system_clock::now().time_since_epoch()
+        );
     std::map<const char *, const char *> m{
         {bucket_key.c_str(), val.c_str()},
-        {bucket_ctime.c_str(), cnt.c_str()},
-        {object_count.c_str(), std::to_string(ms.count()).c_str()}
+        {bucket_ctime.c_str(), std::to_string(ms.count()).c_str()},
+        {object_count.c_str(), cnt.c_str()}
     };
     _db_connector->store_data(m);
 }

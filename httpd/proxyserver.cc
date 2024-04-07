@@ -107,7 +107,8 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
 
 
     // Object routes
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/create", new object_create_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/create", new object_create_handler(_pending_requests, _object));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/prepare", new object_create_handler(_pending_requests, _object));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/content/delete", new object_delete_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/content/show", new object_show_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/content/locate", new object_locate_handler(_pending_requests));
@@ -116,7 +117,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     r.put(operation_type::POST, "/" + version + "/" + ns + "/content/del_properties", new object_del_props_handler(_pending_requests));
 
     // Consience routes
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/info", new object_create_handler(_pending_requests));
+    //r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/info", new object_create_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/conscience/list", new object_delete_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/deregister", new object_show_handler(_pending_requests));
@@ -126,7 +127,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/resolve", new object_show_handler(_pending_requests));
 
     // Load balancing routes
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/reload", new object_create_handler(_pending_requests));
+    //r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/reload", new object_create_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/lb/choose", new object_delete_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/poll", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/lb/create_pool", new object_show_handler(_pending_requests));
