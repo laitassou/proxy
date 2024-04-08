@@ -23,6 +23,8 @@
 
 #include "bucket_handlers.hh"
 #include "object_handlers.hh"
+#include "conscience_handlers.hh"
+
 
 #include "../backend/fdb_connector.hh"
 
@@ -108,7 +110,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
 
     // Object routes
     r.put(operation_type::POST, "/" + version + "/" + ns + "/content/create", new object_create_handler(_pending_requests, _object));
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/prepare", new object_create_handler(_pending_requests, _object));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/content/prepare2", new object_prepare_handler(_pending_requests, _object));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/content/delete", new object_delete_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/content/show", new object_show_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/content/locate", new object_locate_handler(_pending_requests));
@@ -119,7 +121,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     // Consience routes
     //r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/info", new object_create_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/conscience/list", new object_delete_handler(_pending_requests));
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", new object_show_handler(_pending_requests));
+    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", req_handler);
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/deregister", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/flush", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/lock", new object_show_handler(_pending_requests));
@@ -158,10 +160,10 @@ future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http
         //_db_connector->store_data(iter->name.GetString(), iter->value.GetString());
         std::string k=iter->name.GetString();
         std::string v=iter->value.GetString();
-        _bucket->create(k,v);
+        //_bucket->create(k,v);
     }
     rjson::value response = rjson::empty_object();
-    rjson::add(response, "Table", "ok");
+    //rjson::add(response, "Table", "ok");
 
     co_return  co_await make_ready_future<request_return_type>(rjson::print(std::move(response)));
 };
