@@ -73,7 +73,7 @@ void fdb_connector::store_data(std::map<const char *, const char *> &mp)
     {
         //  store data
         for (std::map<const char *,const char *>::iterator it=mp.begin(); it!=mp.end(); ++it){
-            std::cout << it->first << " => " << it->second << '\n';
+            //std::cout << it->first << " => " << it->second << '\n';
             fdb_transaction_set(tr, (const uint8_t *)(it->first), (int)strlen(it->first),\
                 (const uint8_t *)(it->second), (int)strlen(it->second));
         }

@@ -151,7 +151,7 @@ int main(int ac, char** av) {
             uint16_t port = config["port"].as<uint16_t>();
             sstring addr_str{"127.0.0.1"};
             net::inet_address addr(addr_str);
-            
+            std::cout << seastar::smp::count << "\n";
             /*
             auto server = new http_server_control();
             auto rb = std::make_shared<api_registry_builder>("apps/httpd/");

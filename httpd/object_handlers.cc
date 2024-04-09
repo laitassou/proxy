@@ -10,7 +10,7 @@ future<std::unique_ptr<reply>> object_create_handler::do_handle(const sstring& p
     std::string obj{};
 
     for (const auto& p : req->query_parameters) {
-        std::cout << p.first << "\n";
+        //std::cout << p.first << "\n";
         if (std::string{"acct"} == p.first) {
             account = p.second;
         }
@@ -22,7 +22,7 @@ future<std::unique_ptr<reply>> object_create_handler::do_handle(const sstring& p
         }
     }
 
-    std::cout << "object create: "<< account << ","<< ref << "," << path<< "\n";
+    //std::cout << "object create: "<< account << ","<< ref << "," << path<< "\n";
     _object->put(account, ref, obj);
 
     rep->set_status(reply::status_type::ok);
@@ -49,7 +49,22 @@ future<std::unique_ptr<reply>> object_prepare_handler::do_handle(const sstring& 
         rjson::push_back(chunks, std::move(chunk));
     }
     rjson::add(results, "chunks", std::move(chunks));
-    rjson::add(results, "properties", "{}");
+    rjson::add(results, "properties", std::move(properties));
+    rep->add_header("x-oio-ns-chunk-size", "1048576");
+    rep->add_header("x-oio-content-meta-chunk-method", "ec/algo=liberasurecode_rs_vand,k=6,m=3");
+
+    rep->add_header("x-oio-content-meta-ctime","1712583431");
+    rep->add_header("x-oio-content-meta-deleted", "False");
+    rep->add_header("x-oio-content-meta-hash", "");
+    rep->add_header("x-oio-content-meta-hash-method", "md5");
+    rep->add_header("x-oio-content-meta-id", "F5F00FE795150600DEF3DA93F3826E7F");
+    rep->add_header("x-oio-content-meta-length", "1");
+    rep->add_header("x-oio-content-meta-mime-type", "application/octet-stream");
+    rep->add_header("x-oio-content-meta-mtime", "1712583431");
+    rep->add_header("x-oio-content-meta-name", "obj7");
+    rep->add_header("x-oio-content-meta-policy","EC");
+    rep->add_header("x-oio-content-meta-size", "1");
+    rep->add_header("x-oio-content-meta-version", "1712583431155959");
 
     rep->set_status(reply::status_type::ok);
     rep->set_content_type("json");

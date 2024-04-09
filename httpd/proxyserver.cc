@@ -121,7 +121,7 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
     // Consience routes
     //r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/info", new object_create_handler(_pending_requests));
     r.put(operation_type::GET, "/" + version + "/" + ns + "/conscience/list", new object_delete_handler(_pending_requests));
-    r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", req_handler);
+    //r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/register", req_handler);
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/deregister", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/flush", new object_show_handler(_pending_requests));
     r.put(operation_type::POST, "/" + version + "/" + ns + "/conscience/lock", new object_show_handler(_pending_requests));
@@ -138,11 +138,11 @@ void proxyserver::set_routes(seastar::httpd::routes& r){
 
 future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http::request> req){
     sstring target = req->get_header(TARGET);
-    std::cout << "target " << target << "\n";
+    //std::cout << "target " << target << "\n";
     std::vector<std::string_view> split_target = split(target, '.');
-    std::cout << req->_method << "\n";
+    //std::cout << req->_method << "\n";
     for (const auto& p : req->query_parameters) {
-        std::cout << p.first << "\n";
+        //std::cout << p.first << "\n";
 
     }
     /*
@@ -156,7 +156,7 @@ future<request_return_type> proxyserver::handle_api_request(std::unique_ptr<http
 
     rjson::value json_request = co_await _json_parser.parse(req.get()->content);
     for (auto iter = json_request.MemberBegin(); iter != json_request.MemberEnd(); ++iter){
-        std::cout << "key:" << iter->name.GetString() << ":" <<  iter->value.GetString() << "\n";
+        //std::cout << "key:" << iter->name.GetString() << ":" <<  iter->value.GetString() << "\n";
         //_db_connector->store_data(iter->name.GetString(), iter->value.GetString());
         std::string k=iter->name.GetString();
         std::string v=iter->value.GetString();
